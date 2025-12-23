@@ -8,7 +8,7 @@ Three Microsoft email services contain sender spoofing vulnerabilities.
 
 Microsoft Exchange Online and Outlook clients have vulnerabilities in parsing and displaying the headers of incoming emails. Attackers can use tools like swaks to construct SMTP transactions with specific formats, bypassing traditional spoofing detection (SPF alignment checks) and visual security indicators. Sender spoofing against outlook.com and onmicrosoft.com can be directly achieved using swaks.
 
-Gmail cannot directly spoof the sender using swaks, but adding spaces to the sender and email can bypass detection for gmail.com. The root cause appears to be a difference in how email gateways and email clients handle spaces or specific characters (e.g., `fromadmin@ gmail.com`) in email headers.
+Gmail cannot directly spoof the sender using swaks, but adding spaces to the sender and email can bypass detection for gmail.com. The root cause appears to be a difference in how email gateways and email clients handle spaces or specific characters (e.g., `fromadmin @gmail.com`) in email headers.
 
 It's possible that after injecting spaces, the gateway cannot correctly extract the domain name to compare with internally protected domains.
 
