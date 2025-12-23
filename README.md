@@ -1,12 +1,16 @@
 # Email Sender Spoofing via Header Manipulation and Whitespace Injection Bypassing Spoofing Protections
 
-A vulnerability exists in the way Microsoft Exchange Online and the outlook client parse and display the header in incoming emails. By crafting a specifically malformed SMTP transaction using tools like swaks , an attacker can bypass traditional spoofing detection (SPF alignment checks) and visual security indicators.
+Three Microsoft email services contain sender spoofing vulnerabilities.
 
-The root cause appears to be a discrepancy in how the Email Gateway and the Mail Client handle whitespace or specific characters within the header (e.g., ). Specifically:Fromadmin@ gmail.com
+Microsoft Exchange Online and Outlook clients have vulnerabilities in parsing and displaying the headers of incoming emails. Attackers can use tools like swaks to construct SMTP transactions with specific formats, bypassing traditional spoofing detection (SPF alignment checks) and visual security indicators. Sender spoofing against outlook.com and onmicrosoft.com can be directly achieved using swaks.
 
-Maybe The gateway fails to correctly extract the domain for comparison against internal protected domains when a space is injected.
+Gmail cannot directly spoof the sender using swaks, but adding spaces to the sender and email can bypass detection for gmail.com. The root cause appears to be a difference in how email gateways and email clients handle spaces or specific characters (e.g., `fromadmin@gmail.com`) in email headers.
 
-The gmail client renders the forged "Display Name" and "Forged Email" while failing to show "External" or "Identity Unverified" warnings, leading users to believe the email originated from a trusted internal or official source.
+It's possible that after injecting spaces, the gateway cannot correctly extract the domain name to compare with internally protected domains.
+
+The Gmail client displays a spoofed "display name" and "spoofed email," but does not display "external" or "unverified" warnings, leading users to mistakenly believe the email originated from a trusted internal or official source.
+
+Recipient forgery can also be achieved by modifying the `to recipient` field in the email3.txt file of the data file.
 
 Impact
 High-Scale Phishing: Attackers can impersonate high-level executives (CEOs), IT departments, or partners to steal credentials.
