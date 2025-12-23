@@ -2,25 +2,19 @@
 
 ## Email sender forgery
 
-#### Hazard Description:
+### Description
 
-1. Sender Identity Forgery: Attackers can arbitrarily forge sender email addresses, including impersonating company executives, business partners, and other important identities, to carry out social engineering attacks.
+Three Microsoft email services contain sender spoofing vulnerabilities.
 
-2. Phishing Attack Risk: By forging a trusted sender to send phishing emails, attackers can trick users into clicking malicious links or downloading malicious attachments, potentially leading to account theft and leakage of sensitive information.
+Microsoft Exchange Online and Outlook clients have vulnerabilities in parsing and displaying the headers of incoming emails. Attackers can use tools like swaks to construct SMTP transactions with specific formats, bypassing traditional spoofing detection (SPF alignment checks) and visual security indicators. Sender spoofing against outlook.com and onmicrosoft.com can be directly achieved using swaks.
 
-3. Internal Fraud: Attackers can forge emails from internal management personnel, requesting employees to transfer money, provide sensitive data, or perform malicious operations, causing economic losses to the company.
+Gmail cannot directly spoof the sender using swaks, but adding spaces to the sender and email can bypass detection for gmail.com. The root cause appears to be a difference in how email gateways and email clients handle spaces or specific characters (e.g., `fromadmin@gmail.com`) in email headers.
 
-4. Trust Abuse: Because the WeChat client lacks security alerts, users cannot distinguish between genuine and fake emails, completely undermining the email system's authentication mechanism.
+It's possible that after injecting spaces, the gateway cannot correctly extract the domain name to compare with internally protected domains.
 
-5. Expanded Attack Surface: Attackers can exploit this vulnerability in combination with other attack methods to form a complete attack chain.
+The Gmail client displays a spoofed "display name" and "spoofed email," but does not display "external" or "unverified" warnings, leading users to mistakenly believe the email originated from a trusted internal or official source.
 
-#### Test Steps:
-
-1. Prepare the forged email: Use the swaks tool or a self-built SMTP client to construct an email containing forged sender information.
-
-2. Configure the email content: Write the email content in email3.txt, setting the recipient, subject, body, etc.
-
-3. Send the email: Send the email through the specified SMTP server (smtpdm.email.com), using the forged sender address.
+Recipient forgery can also be achieved by modifying the `to recipient` field in the email3.txt file of the data file.
 
 ### Outlook
 
@@ -65,8 +59,7 @@ email3.txt
 ```c
 #Based on the email gateway's identification logic, directly add spaces to bypass the detection logic =========
 swaks --to cheatname@cheat.com --from yourname@youremail.com \
-
---h-From: 'IT service department<IT @cheat.com >' --ehlo cheat.com --server smtp.youremail.com -p 25 -au yourname@youremail.com -ap smtp authorization code -data @email2.txt
+	--h-From: 'IT service department<IT @cheat.com >' --ehlo cheat.com --server smtp.youremail.com -p 25 -au yourname@youremail.com -ap smtp authorization code -data @email2.txt
 ```
 
 ![image-20251221160846062](Microsoft_mailspoff.assets/image-20251221160846062.png) 
@@ -98,4 +91,24 @@ swaks --to xx@gmail.com --from youname@email.com --h-From: '汪主管<admin@ gma
 
 ![image-20251221170141157](Microsoft_mailspoff.assets/image-20251221170141157.png) 
 
-### 
+### Remarks
+
+#### Hazard Description:
+
+1. Sender Identity Forgery: Attackers can arbitrarily forge sender email addresses, including impersonating company executives, business partners, and other important identities, to carry out social engineering attacks.
+
+2. Phishing Attack Risk: By forging a trusted sender to send phishing emails, attackers can trick users into clicking malicious links or downloading malicious attachments, potentially leading to account theft and leakage of sensitive information.
+
+3. Internal Fraud: Attackers can forge emails from internal management personnel, requesting employees to transfer money, provide sensitive data, or perform malicious operations, causing economic losses to the company.
+
+4. Trust Abuse: Because the WeChat client lacks security alerts, users cannot distinguish between genuine and fake emails, completely undermining the email system's authentication mechanism.
+
+5. Expanded Attack Surface: Attackers can exploit this vulnerability in combination with other attack methods to form a complete attack chain.
+
+#### Test Steps:
+
+1. Prepare the forged email: Use the swaks tool or a self-built SMTP client to construct an email containing forged sender information.
+
+2. Configure the email content: Write the email content in email3.txt, setting the recipient, subject, body, etc.
+
+3. Send the email: Send the email through the specified SMTP server (smtpdm.email.com), using the forged sender address.
